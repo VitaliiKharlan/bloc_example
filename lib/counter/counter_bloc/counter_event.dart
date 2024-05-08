@@ -1,7 +1,7 @@
-part of 'user_bloc.dart';
+part of 'counter_bloc.dart';
 
-@immutable
-sealed class UserEvent {}
+// @immutable
+abstract class UserEvent {}
 
 class UserGetUsersEvent extends UserEvent {
   final int count;

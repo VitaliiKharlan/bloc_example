@@ -1,6 +1,6 @@
-part of 'user_bloc.dart';
+part of 'counter_bloc.dart';
 
-@immutable
+
 class UserState {
   final List<User> users;
   final List<Job> job;
@@ -16,14 +16,14 @@ class UserState {
     List<User>? users,
     List<Job>? job,
     bool isLoading = false,
-}) {
+  }) {
     return UserState(
       users: users ?? this.users,
       job: job ?? this.job,
       isLoading: isLoading,
     );
 
-}
+  }
 }
 
 class User {

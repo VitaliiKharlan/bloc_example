@@ -29,6 +29,10 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter_bloc: ^8.1.5
+  dio: ^5.4.3+1
+  bloc_concurrency: ^0.2.5
+  stream_transform: ^2.1.0
+
   flutter:
     sdk: flutter
 

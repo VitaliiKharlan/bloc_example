@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+// import 'package:meta/meta.dart';
 
 import '../counter_bloc.dart';
 
-part 'user_event.dart';
+part 'counter_event.dart';
 
-part 'user_state.dart';
+part 'counter_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final CounterBloc counterBloc;
