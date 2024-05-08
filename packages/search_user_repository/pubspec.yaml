@@ -1,0 +1,31 @@
+name: search_user_repository
+description: search_user_repository
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter_bloc: ^8.1.5
+  dio: ^5.4.3+1
+  bloc_concurrency: ^0.2.5
+  stream_transform: ^2.1.0
+
+  flutter:
+    sdk: flutter
+
+
+
+  cupertino_icons: ^1.0.6
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^3.0.0
+
