@@ -38,10 +38,26 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counterBloc = BlocProvider.of<CounterBloc>(context);
-    return  Scaffold(
-        floatingActionButton: Column(
+    return Scaffold(
+      floatingActionButton: BlocConsumer<CounterBloc, int>(
+        buildWhen: (prev, current) => prev > current,
+        listenWhen: (prev, current) => prev > current,
+        listener: (context, state) {
+          if (state == 0) {
+            Scaffold.of(context).showBottomSheet(
+              (context) => Container(
+                color: Colors.blue,
+                width: double.infinity,
+                height: 30,
+                child: const Text('State is 0'),
+              ),
+            );
+          }
+        },
+        builder: (context, state) => Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(state.toString()),
             IconButton(
               onPressed: () {
                 counterBloc.add(CounterIncrementEvent());
@@ -85,33 +101,32 @@ class MyHomePage extends StatelessWidget {
             ),
           ],
         ),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              children: [
-                BlocBuilder<CounterBloc, int>(
-                  // bloc: counterBloc,
-                  builder: (context, state) {
-                    final users =
-                        context.select((UserBloc bloc) => bloc.state.users);
-                    return Column(
-                      children: [
-                        Text(
-                          state.toString(),
-                          style: const TextStyle(fontSize: 33),
-                        ),
-                        if (users.isNotEmpty)
-                          ...users.map((e) => Text(e.name)),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              BlocBuilder<CounterBloc, int>(
+                // bloc: counterBloc,
+                builder: (context, state) {
+                  final users =
+                      context.select((UserBloc bloc) => bloc.state.users);
+                  return Column(
+                    children: [
+                      Text(
+                        state.toString(),
+                        style: const TextStyle(fontSize: 33),
+                      ),
+                      if (users.isNotEmpty) ...users.map((e) => Text(e.name)),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
         ),
-      );
-
+      ),
+    );
   }
 }
 
@@ -133,8 +148,6 @@ class Job extends StatelessWidget {
           return Column(
             children: [
               if (state.isLoading) const CircularProgressIndicator(),
-              // if (users.isNotEmpty)
-              //   ...users.map((e) => Text(e.name)),
               if (job.isNotEmpty) ...state.job.map((e) => Text(e.name)),
             ],
           );
@@ -143,22 +156,3 @@ class Job extends StatelessWidget {
     );
   }
 }
-
-// class Wrapper extends StatelessWidget {
-//   const Wrapper({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MultiBlocProvider(
-//       providers: [
-//         BlocProvider<CounterBloc>(
-//           create: (context) => CounterBloc(),
-//         ),
-//         BlocProvider<UserBloc>(
-//           create: (context) => UserBloc(),
-//         ),
-//       ],
-//       child: const MyHomePage(),
-//     );
-//   }
-// }
