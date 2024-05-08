@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'counter_bloc.dart';
+import 'user_bloc/user_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,38 +25,86 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = CounterBloc()..add(CounterDecrementEvent());
+    final counterBloc = CounterBloc()..add(CounterDecrementEvent());
+    final userBloc = UserBloc();
 
-    return BlocProvider<CounterBloc>(
-      create: (context) => bloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CounterBloc>(
+          create: (context) => counterBloc,
+        ),
+        BlocProvider<UserBloc>(
+          create: (context) => userBloc,
+        ),
+      ],
       child: Scaffold(
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               onPressed: () {
-                bloc.add(CounterIncrementEvent());
+                counterBloc.add(CounterIncrementEvent());
               },
               icon: const Icon(Icons.plus_one),
             ),
             IconButton(
               onPressed: () {
-                bloc.add(CounterDecrementEvent());
+                counterBloc.add(CounterDecrementEvent());
               },
               icon: const Icon(Icons.exposure_minus_1),
             ),
+            IconButton(
+              onPressed: () {
+                userBloc.add(UserGetUsersEvent(counterBloc.state));
+              },
+              icon: const Icon(Icons.person),
+            ),
+            IconButton(
+              onPressed: () {
+                userBloc.add(UserGetUsersJobEvent(counterBloc.state));
+              },
+              icon: const Icon(Icons.work),
+            ),
+
           ],
         ),
-        body: Center(
-          child: BlocBuilder<CounterBloc, int>(
-            bloc: bloc,
-            builder: (context, state) {
-              return Text(
-                state.toString(),
-                // state.toString(),
-                style: const TextStyle(fontSize: 33),
-              );
-            },
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                BlocBuilder<CounterBloc, int>(
+                  bloc: counterBloc,
+                  builder: (context, state) {
+                    return Text(
+                      state.toString(),
+                      style: const TextStyle(fontSize: 33),
+                    );
+                  },
+                ),
+                BlocBuilder<UserBloc, UserState>(
+                  bloc: userBloc,
+                  builder: (context, state) {
+                    final users = state.users;
+                    final job = state.job;
+
+                    return Column(
+                      children: [
+                        if (state.isLoading) const CircularProgressIndicator(),
+                        if (users.isNotEmpty)
+                          ...state.users.map((e) => Text(e.name)),
+                        if (job.isNotEmpty)
+                          ...state.job.map((e) => Text(e.name)),
+                        // Text(
+                        //   state.toString(),
+                        //
+                        //   style: const TextStyle(fontSize: 33),
+                        // ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
